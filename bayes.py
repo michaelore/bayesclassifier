@@ -14,10 +14,9 @@ with open('data.csv', 'rb') as datafile:
 		for i in xrange(4, len(row)):
 			totals[i] += int(row[i])
 		if not datadict.has_key(row[1]):
-			datadict[row[1]] = row
-		else:
-			for i in xrange(4, len(row)):
-				datadict[row[1]][i] += row[i]
+			datadict[row[1]] = [0 for i in xrange(0, len(columns))]
+		for i in xrange(4, len(row)):
+			datadict[row[1]][i] += int(row[i])
 
 evidence = map(lambda t: log(totals[4]-t+2)-log(t+2), totals)
 
@@ -33,9 +32,13 @@ with open('input.txt', 'rb') as inputfile:
 	for word in wordgen:
 		if datadict.has_key(word):
 			tot = int(datadict[word][4])
+			#print "Word: " +  word
 			for i in xrange(5, len(columns)):
 				count = int(datadict[word][i])
-				logratios[i] += log(count+1)-log(tot-count+1)+evidence[i]
+				logfactor = log(count+1)-log(tot-count+1)+evidence[i]
+				logratios[i] += logfactor
+				#print columns[i] + ": " + str(logfactor)
+			#print ""
 
 for i in xrange(5, len(columns)):
 	print columns[i] + ": " + str(logratios[i])
